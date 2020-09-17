@@ -5,13 +5,13 @@ RUN apt update && apt -y upgrade && apt install -y python3 python3-pip unzip ope
 RUN mkdir -p /var/log/supervisor
 COPY supervisord.conf /supervisord.conf
 RUN mkdir /var/run/sshd
-RUN echo 'root:THEPASSWORDYOUCREATED' | chpasswd
+RUN echo 'root:RIOKOENIGVONDEUTSCHLAND' | chpasswd
 RUN sed -i 's/#*PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
 RUN sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' /etc/pam.d/sshd
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 # **ALL** clients are welcome
-RUN echo 'auth sufficient                      pam_permit.so' > /etc/pam.d/sshd
+#RUN echo 'auth sufficient                      pam_permit.so' > /etc/pam.d/sshd
 # expose sshd and java server
 EXPOSE 22532 25333
 # copy stuff of py4j backend 

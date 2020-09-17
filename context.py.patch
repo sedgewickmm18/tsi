@@ -1,0 +1,28 @@
+--- a/python/tspy/data_structures/context.py
++++ b/python/tspy/data_structures/context.py
+@@ -87,19 +87,12 @@ class TSContext(object):
+             self._jvm = jvm
+             self._gateway = gateway
+ 
+-            # added callback server to gateway which allows for lambdas on single machine
+-            if not hasattr(self._gateway.gateway_parameters, 'auth_token'):  # in 2.3 and below, there is no token
+-                self._gateway.start_callback_server(
+-                    CallbackServerParameters(port=callback_server_port, daemonize=daemonize,
+-                                             daemonize_connections=daemonize))
+-            else:  # in 2.4+ there is a token that must be included
+-                self._gateway.start_callback_server(
+-                    CallbackServerParameters(port=callback_server_port, daemonize=daemonize,
+-                                             daemonize_connections=daemonize,
+-                                             auth_token=self._gateway.gateway_parameters.auth_token))
++            self._gateway.start_callback_server(self._gateway.callback_server_parameters)
++
+             self._gateway.java_gateway_server.resetCallbackClient(
+-                self._gateway.java_gateway_server.getCallbackClient().getAddress(),
+-                self._gateway.get_callback_server().get_listening_port()
++                self._gateway.get_callback_server().get_listening_address(),
++                self._gateway.get_callback_server().get_listening_port(),
++                self._gateway.gateway_parameters.auth_token
+             )
+             self._port = self._gateway._gateway_client.port
+             self._callback_server_port = self._gateway.get_callback_server().get_listening_port()
+
